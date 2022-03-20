@@ -1,0 +1,25 @@
+Features
+---------------------
+- Sign in with Google
+- Start game against opponent
+- Perform game moves
+
+
+SQLAlchemy
+Flask
+
+
+Sign in with Google
+-------------------
+- Add button to index.html
+- Create backend with endpoint accepting JWT
+- Verify JWT in backend
+- Sign user in (flask-login?)
+
+-> backend
+    venv
+    dependencies
+    google-auth
+    session
+    gunicorn
+    service->gunicorn

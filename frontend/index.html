@@ -1,0 +1,32 @@
+<html>
+  <body>
+      <script src="https://accounts.google.com/gsi/client" async defer></script>
+      <div id="g_id_onload"
+         data-client_id="454722707691-6g34s4pnbtp75vpcq2o6crhls5mcsl0g.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-shape="rectangular"
+         data-width=200px
+         data-logo_alignment="left">
+      </div>
+      <script>
+         function handleCredentialResponse(response) {
+            console.log(response.credential);
+            fetch("/api/google-login", {
+               method: "POST",
+               // headers: {
+               //    "Content-Type": "application/json"
+               // },
+               body: response.credential
+            }).then(response => console.log(response));
+         }
+      </script>
+  </body>
+</html>
+<!-- data-login_uri="https://innarow.se/api/google_login" -->
