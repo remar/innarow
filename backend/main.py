@@ -16,7 +16,18 @@ if gunicorn_logger.handlers:
 @app.route("/api/google-login", methods = ["POST"])
 def google_login():
     token = request.data.decode("utf-8")
-    idinfo = id_token.verify_oauth2_token(token, requests.Request(), GOOGLE_CLIENT_ID)
-    app.logger.warning(token)
-    app.logger.warning(idinfo)
-    return "hejsan"
+    try:
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), GOOGLE_CLIENT_ID)
+        app.logger.warning(token)
+        app.logger.warning(idinfo)
+        session["email"] = idinfo["email"]
+        return {}
+    except ValueError:
+        return {}, 401
+
+@app.route("/api/get-email", methods = ["GET"])
+def get_email():
+    if "email" in session:
+        return session["email"]
+    else:
+        return {}, 401
