@@ -1,8 +1,9 @@
 import os
 import logging
-from flask import Flask, request, session
+from flask import Flask, request, session, abort
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
@@ -12,6 +13,15 @@ gunicorn_logger = logging.getLogger('gunicorn.error')
 if gunicorn_logger.handlers:
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)
+
+def login_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if "email" in session:
+            return func(*args, **kwargs)
+        else:
+            abort(401)
+    return wrapper
 
 @app.route("/api/google-login", methods = ["POST"])
 def google_login():
@@ -23,11 +33,9 @@ def google_login():
         session["email"] = idinfo["email"]
         return {}
     except ValueError:
-        return {}, 401
+        abort(401)
 
 @app.route("/api/get-email", methods = ["GET"])
+@login_required
 def get_email():
-    if "email" in session:
-        return session["email"]
-    else:
-        return {}, 401
+    return session["email"]
