@@ -1,7 +1,9 @@
+import os
 import logging
 from flask import Flask, request
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY")
 
 gunicorn_logger = logging.getLogger('gunicorn.error')
 if gunicorn_logger.handlers:
