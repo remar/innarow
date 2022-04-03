@@ -1,4 +1,5 @@
 FLASK_APP=main.py
 FLASK_ENV=development
 SECRET_KEY=abc123
-GOOGLE_CLIENT_ID=*
+GOOGLE_CLIENT_ID=454722707691-6g34s4pnbtp75vpcq2o6crhls5mcsl0g.apps.googleusercontent.com
+FLASK_RUN_PORT=5001
