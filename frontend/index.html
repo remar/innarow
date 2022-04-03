@@ -16,6 +16,7 @@
          data-width=200px
          data-logo_alignment="left">
       </div>
+      <div id="show_email"></div>
       <script>
          function handleCredentialResponse(response) {
             console.log(response.credential);
@@ -24,6 +25,23 @@
                body: response.credential
             }).then(response => console.log(response));
          }
+         function getEmail() {
+            return document.getElementById("show_email").innerHTML;
+         }
+         function setEmail(email) {
+            document.getElementById("show_email").innerHTML = email;
+         }
+         function setEmailLoop() {
+            if(!getEmail()) {
+               fetch("/api/get-email").then(response => {
+                  if(response.ok) {
+                     response.text().then(email =>  setEmail(email));
+                  }
+               });
+               setTimeout(setEmailLoop, 1000);
+            }
+         }
+         setEmailLoop();
       </script>
   </body>
 </html>
