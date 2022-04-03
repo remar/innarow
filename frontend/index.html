@@ -21,9 +21,6 @@
             console.log(response.credential);
             fetch("/api/google-login", {
                method: "POST",
-               // headers: {
-               //    "Content-Type": "application/json"
-               // },
                body: response.credential
             }).then(response => console.log(response));
          }
