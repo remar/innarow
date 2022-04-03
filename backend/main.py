@@ -4,6 +4,7 @@ from flask import Flask, request, session, abort
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from functools import wraps
+import memory_repo as repo
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
@@ -31,6 +32,11 @@ def google_login():
         app.logger.warning(token)
         app.logger.warning(idinfo)
         session["email"] = idinfo["email"]
+        if not repo.get_user(idinfo["email"]):
+            app.logger.warning(f"New user {idinfo['email']}!")
+            repo.add_user(idinfo["email"])
+        else:
+            app.logger.warning("User exists!")
         return {}
     except ValueError:
         abort(401)
