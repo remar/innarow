@@ -45,3 +45,17 @@ def google_login():
 @login_required
 def get_email():
     return session["email"]
+
+@app.route("/api/users", methods = ["GET"])
+@login_required
+def get_users():
+    return {"users":repo.get_users()}
+
+# GET /api/users -> get all users -- why?
+# GET /api/users/<id> -> get user with id -- why?
+# POST /api/games -> create new game with user as first player
+# GET /api/games -> list all games
+# GET /api/games?status=open -> list games with only 1 player
+# GET /api/games/<id> -> get game with id (any game? or just where you participate..?)
+# PATCH /api/games/<id> {"challenger":<userid>} -> join game
+# POST /api/games/<id>/move {"X": 5, "Y": 3} OR? [5,3] -> put new piece on board
