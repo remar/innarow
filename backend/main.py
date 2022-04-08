@@ -4,7 +4,7 @@ from flask import Flask, request, session, abort
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from functools import wraps
-import memory_repo as repo
+import file_repo as repo
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
