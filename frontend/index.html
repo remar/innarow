@@ -17,8 +17,8 @@
          data-logo_alignment="left">
       </div>
       <div id="show_email"></div>
-      <button onclick="createNewGame()">Create new game</button>
-      <button onclick="listGames()">List games</button>
+      <div><button onclick="createNewGame()">Create new game</button></div>
+      <div><button onclick="listGames()">List games</button></div>
       <ul id="game_list"></ul>
       <script>
          function createNewGame() {
@@ -34,7 +34,9 @@
                      gameList.innerHTML = "";
                      for(const element of gamesObject.games) {
                         const li = document.createElement("li");
-                        li.innerHTML = element;
+                        const button = document.createElement("button");
+                        button.innerHTML = element;
+                        li.appendChild(button);
                         gameList.appendChild(li);
                      }
                   });
