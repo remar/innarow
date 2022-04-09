@@ -26,6 +26,10 @@ def create_game(player1):
     __write_games()
     return game_id
 
+def get_games():
+    __read_games()
+    return list(games.keys())
+
 def __read_users():
     global users
     if users == None:

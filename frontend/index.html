@@ -18,12 +18,28 @@
       </div>
       <div id="show_email"></div>
       <button onclick="createNewGame()">Create new game</button>
+      <button onclick="listGames()">List games</button>
+      <ul id="game_list"></ul>
       <script>
          function createNewGame() {
-            console.log("Create new game");
             fetch("/api/games", {
                method: "POST"
-            }).then(response => console.log(response));
+            }).then(response => listGames());
+         }
+         function listGames() {
+            fetch("/api/games").then(response => {
+               if(response.ok) {
+                  response.json().then(gamesObject => {
+                     const gameList = document.getElementById("game_list");
+                     gameList.innerHTML = "";
+                     for(const element of gamesObject.games) {
+                        const li = document.createElement("li");
+                        li.innerHTML = element;
+                        gameList.appendChild(li);
+                     }
+                  });
+               }
+            });
          }
          function handleCredentialResponse(response) {
             console.log(response.credential);

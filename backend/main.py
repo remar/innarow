@@ -57,6 +57,11 @@ def create_game():
     game_id = repo.create_game(session["email"])
     return {}, 201, {"Location":f"/api/games/{game_id}"}
 
+@app.route("/api/games", methods = ["GET"])
+@login_required
+def get_games():
+    return {"games":repo.get_games()}
+
 # GET /api/users -> get all users -- why?
 # GET /api/users/<id> -> get user with id -- why?
 # POST /api/games -> create new game with user as first player
