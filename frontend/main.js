@@ -44,9 +44,4 @@ function setEmailLoop() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    setEmailLoop();
-
-    // // this function runs when the DOM is ready, i.e. when the document has been parsed
-    // document.getElementById("user-greeting").textContent = "Welcome back, Bart";
-});
+window.onload = setEmailLoop;
