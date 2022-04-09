@@ -24,7 +24,7 @@
          function createNewGame() {
             fetch("/api/games", {
                method: "POST"
-            }).then(response => listGames());
+            }).then(() => listGames());
          }
          function listGames() {
             fetch("/api/games").then(response => {
