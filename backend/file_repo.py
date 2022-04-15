@@ -21,7 +21,7 @@ def create_game(player1):
     __read_games()
     global next_game_id
     game_id = next_game_id
-    games[game_id] = {"player1":player1, "player2":None, "moves":[]}
+    games[str(game_id)] = {"player1":player1, "player2":None, "moves":[]}
     next_game_id += 1
     __write_games()
     return game_id
@@ -29,6 +29,10 @@ def create_game(player1):
 def get_games():
     __read_games()
     return list(games.keys())
+
+def get_game(id):
+    __read_games()
+    return games[id]
 
 def __read_users():
     global users

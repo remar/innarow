@@ -9,10 +9,11 @@ function listGames() {
             response.json().then(gamesObject => {
                 const gameList = document.getElementById("game_list");
                 gameList.innerHTML = "";
-                for (const element of gamesObject.games) {
+                for (const id of gamesObject.games) {
                     const li = document.createElement("li");
                     const button = document.createElement("button");
-                    button.innerHTML = element;
+                    button.innerHTML = id;
+                    button.onclick = () => showGame(id);
                     li.appendChild(button);
                     gameList.appendChild(li);
                 }
@@ -20,6 +21,38 @@ function listGames() {
         }
     });
 }
+
+function showGame(id) {
+    fetch(`/api/games/${id}`).then(response => {
+        if(response.ok) {
+            response.json().then(game => {
+                const board = []
+                for(let y = 0;y < 15;y++) {
+                    board.push(Array.from({length: 15}, () => 0));
+                }
+                let current = 1;
+                for(const move of game.moves) {
+                    board[move[1]][move[0]] = current;
+                    current = current % 2 + 1;
+                }
+                renderedBoard = board.map(line => line.map(element => renderElement(element)).join(" ")).join("\n");
+                console.log(renderedBoard);
+                document.getElementById("show_game").innerHTML = renderedBoard;
+            });
+        }
+    });
+}
+
+function renderElement(element) {
+    if(element === 0) {
+        return ".";
+    } else if(element == 1) {
+        return "X";
+    } else {
+        return "O";
+    }
+}
+
 function handleCredentialResponse(response) {
     console.log(response.credential);
     fetch("/api/google-login", {
