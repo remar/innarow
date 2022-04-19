@@ -34,6 +34,11 @@ def get_game(id):
     __read_games()
     return games[id]
 
+def save_game(id, game):
+    __read_games()
+    games[id] = game
+    __write_games()
+
 def __read_users():
     global users
     if users == None:

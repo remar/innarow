@@ -67,6 +67,17 @@ def get_games():
 def get_game(id):
     return repo.get_game(str(id))
 
+@app.route("/api/games/<int:id>", methods = ["PATCH"])
+@login_required
+def join_game(id):
+    game = repo.get_game(str(id))
+    if game["player2"] == None:
+        game["player2"] = session["email"]
+        repo.save_game(str(id), game)
+        return {}, 200
+    else:
+        return {}, 409
+
 # GET /api/users -> get all users -- why?
 # GET /api/users/<id> -> get user with id -- why?
 # POST /api/games -> create new game with user as first player

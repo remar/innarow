@@ -10,11 +10,17 @@ function listGames() {
                 const gameList = document.getElementById("game_list");
                 gameList.innerHTML = "";
                 for (const id of gamesObject.games) {
+                    const div = document.createElement("div")
+
                     const li = document.createElement("li");
                     const button = document.createElement("button");
                     button.innerHTML = id;
                     button.onclick = () => showGame(id);
-                    li.appendChild(button);
+                    li.appendChild(button)
+                    const joinButton = document.createElement("button");
+                    joinButton.innerHTML = "Join";
+                    joinButton.onclick = () => joinGame(id);
+                    li.appendChild(joinButton);
                     gameList.appendChild(li);
                 }
             });
@@ -35,11 +41,17 @@ function showGame(id) {
                     board[move[1]][move[0]] = current;
                     current = current % 2 + 1;
                 }
-                renderedBoard = board.map(line => line.map(element => renderElement(element)).join(" ")).join("\n");
+                renderedBoard = game.player1 + " vs " + game.player2 + "\n" + board.map(line => line.map(element => renderElement(element)).join(" ")).join("\n");
                 console.log(renderedBoard);
                 document.getElementById("show_game").innerHTML = renderedBoard;
             });
         }
+    });
+}
+
+function joinGame(id) {
+    fetch(`/api/games/${id}`, {
+        method: "PATCH"
     });
 }
 
