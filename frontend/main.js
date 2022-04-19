@@ -10,22 +10,21 @@ function listGames() {
                 const gameList = document.getElementById("game_list");
                 gameList.innerHTML = "";
                 for (const id of gamesObject.games) {
-                    const div = document.createElement("div")
-
                     const li = document.createElement("li");
-                    const button = document.createElement("button");
-                    button.innerHTML = id;
-                    button.onclick = () => showGame(id);
-                    li.appendChild(button)
-                    const joinButton = document.createElement("button");
-                    joinButton.innerHTML = "Join";
-                    joinButton.onclick = () => joinGame(id);
-                    li.appendChild(joinButton);
+                    li.appendChild(createButton(id, () => showGame(id)));
+                    li.appendChild(createButton("Join", () => joinGame(id)));
                     gameList.appendChild(li);
                 }
             });
         }
     });
+}
+
+function createButton(text, callback) {
+    const button = document.createElement("button");
+    button.innerHTML = text;
+    button.onclick = callback;
+    return button;
 }
 
 function showGame(id) {
