@@ -40,7 +40,10 @@ function showGame(id) {
                     board[move[1]][move[0]] = current;
                     current = current % 2 + 1;
                 }
-                renderedBoard = game.player1 + " vs " + game.player2 + "\n" + board.map(line => line.map(element => renderElement(element)).join(" ")).join("\n");
+                renderedBoard = game.player1 + " vs " + game.player2 + "\n" +
+                    "                     1 1 1 1 1 1\n" +
+                    "   1 2 3 4 5 6 7 8 9 0 1 2 3 4 5\n" +
+                    board.map((line, index) => `${index < 9 ? " ":""}${index + 1} ` + line.map(element => renderElement(element)).join(" ")).join("\n");
                 console.log(renderedBoard);
                 document.getElementById("show_game").innerHTML = renderedBoard;
             });
