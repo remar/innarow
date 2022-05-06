@@ -1,3 +1,5 @@
+let currentGame = -1;
+
 function createNewGame() {
     fetch("/api/games", {
         method: "POST"
@@ -28,6 +30,7 @@ function createButton(text, callback) {
 }
 
 function showGame(id) {
+    currentGame = id;
     fetch(`/api/games/${id}`).then(response => {
         if(response.ok) {
             response.json().then(game => {
@@ -55,6 +58,20 @@ function joinGame(id) {
     fetch(`/api/games/${id}`, {
         method: "PATCH"
     });
+}
+
+function doMove() {
+    if(currentGame == -1) {
+        return;
+    }
+
+    fetch(`/api/games/${currentGame}`, {
+        method: "POST",
+        body: JSON.stringify({
+            "x": parseInt(document.getElementById("x").value) - 1,
+            "y": parseInt(document.getElementById("y").value) - 1
+        })
+    }).then(() => showGame(currentGame));
 }
 
 function renderElement(element) {

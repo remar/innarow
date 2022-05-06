@@ -5,6 +5,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from functools import wraps
 import file_repo as repo
+import json
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
@@ -78,6 +79,19 @@ def join_game(id):
     else:
         return {}, 409
 
+@app.route("/api/games/<int:id>", methods=["POST"])
+@login_required
+def do_move(id):
+    # TODO: check if game exists
+    # TODO: check that user is the one that should perform a move
+    move = json.loads(request.data.decode())
+    print(move)
+    game = repo.get_game(str(id))
+    # TODO: check that move is in legal spot
+    game["moves"].append([int(move["x"]), int(move["y"])])
+    repo.save_game(str(id), game)
+    return {}, 200
+
 # GET /api/users -> get all users -- why?
 # GET /api/users/<id> -> get user with id -- why?
 # POST /api/games -> create new game with user as first player
@@ -85,4 +99,4 @@ def join_game(id):
 # GET /api/games?status=open -> list games with only 1 player
 # GET /api/games/<id> -> get game with id (any game? or just where you participate..?)
 # PATCH /api/games/<id> -> join game
-# POST /api/games/<id>/move {"X": 5, "Y": 3} OR? [5,3] -> put new piece on board
+# POST /api/games/<id> {"X": 5, "Y": 3} OR? [5,3] -> put new piece on board
