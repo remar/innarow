@@ -66,14 +66,14 @@ def get_games():
 @app.route("/api/games/<int:id>", methods = ["GET"])
 @login_required
 def get_game(id):
-    return repo.get_game(str(id))
+    return repo.get_game(str(id)).to_json()
 
 @app.route("/api/games/<int:id>", methods = ["PATCH"])
 @login_required
 def join_game(id):
     game = repo.get_game(str(id))
-    if game["player2"] == None:
-        game["player2"] = session["email"]
+    if game.player2 == None:
+        game.player2 = session["email"]
         repo.save_game(str(id), game)
         return {}, 200
     else:
@@ -83,12 +83,9 @@ def join_game(id):
 @login_required
 def do_move(id):
     # TODO: check if game exists
-    # TODO: check that user is the one that should perform a move
     move = json.loads(request.data.decode())
-    print(move)
     game = repo.get_game(str(id))
-    # TODO: check that move is in legal spot
-    game["moves"].append([int(move["x"]), int(move["y"])])
+    game.move(session["email"], int(move["x"]), int(move["y"]))
     repo.save_game(str(id), game)
     return {}, 200
 

@@ -1,4 +1,5 @@
 import json
+from Game import Game
 
 users = None
 games = None
@@ -32,11 +33,13 @@ def get_games():
 
 def get_game(id):
     __read_games()
-    return games[id]
+    if id not in games:
+        return None
+    return Game(games[id]["player1"], games[id]["player2"], games[id]["moves"])
 
 def save_game(id, game):
     __read_games()
-    games[id] = game
+    games[id] = {"player1":game.player1, "player2":game.player2, "moves":game.moves}
     __write_games()
 
 def __read_users():
