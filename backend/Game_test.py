@@ -32,14 +32,13 @@ def test_Move_NotPlayersTurn_RaisesNotPlayersTurnError():
     with pytest.raises(NotPlayersTurnError):
         game.move("p2", 7, 7)
 
+# move: outside field -> IllegalMoveError
+
+# move: already taken position -> IllegalMoveError
+
 def test_ToJson_WithValidContents_ReturnsJson():
     game = Game("p1", "p2", [[1, 1], [2, 2]])
     game_object = json.loads(game.to_json())
     assert game_object["player1"] == "p1"
     assert game_object["player2"] == "p2"
     assert game_object["moves"] == [[1,1],[2,2]]
-
-# outside field -> IllegalMoveError
-
-# already taken position -> IllegalMoveError
-
