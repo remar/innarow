@@ -6,6 +6,7 @@ from google.auth.transport import requests
 from functools import wraps
 import file_repo as repo
 import json
+from Game import *
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
@@ -86,9 +87,16 @@ def do_move(id):
     if not game:
         return "Game not found", 404
     move = json.loads(request.data.decode())
-    game.move(session["email"], int(move["x"]), int(move["y"]))
-    repo.save_game(str(id), game)
-    return {}, 200
+    try:
+        game.move(session["email"], int(move["x"]), int(move["y"]))
+        repo.save_game(str(id), game)
+        return {}, 200
+    except PlayersMissingError:
+        return "Players missing", 400
+    except NotPlayersTurnError:
+        return "It's not players turn", 409
+    except IllegalMoveError:
+        return "That move is not allowed", 400
 
 # GET /api/users -> get all users -- why?
 # GET /api/users/<id> -> get user with id -- why?
