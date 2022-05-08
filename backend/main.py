@@ -82,9 +82,10 @@ def join_game(id):
 @app.route("/api/games/<int:id>", methods=["POST"])
 @login_required
 def do_move(id):
-    # TODO: check if game exists
-    move = json.loads(request.data.decode())
     game = repo.get_game(str(id))
+    if not game:
+        return "Game not found", 404
+    move = json.loads(request.data.decode())
     game.move(session["email"], int(move["x"]), int(move["y"]))
     repo.save_game(str(id), game)
     return {}, 200

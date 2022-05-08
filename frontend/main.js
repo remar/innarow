@@ -71,7 +71,11 @@ function doMove() {
             "x": parseInt(document.getElementById("x").value) - 1,
             "y": parseInt(document.getElementById("y").value) - 1
         })
-    }).then(() => showGame(currentGame));
+    }).then(response => {
+        if(response.ok) {
+            showGame(currentGame);
+        }
+    });
 }
 
 function renderElement(element) {
