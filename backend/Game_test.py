@@ -1,6 +1,6 @@
 import json
 import pytest
-from Game import Game, PlayersMissingError, NotPlayersTurnError
+from Game import Game, PlayersMissingError, NotPlayersTurnError, IllegalMoveError
 
 def test_Game_WithoutConstructorArguments_CreatesEmptyGame():
     game = Game()
@@ -32,9 +32,16 @@ def test_Move_NotPlayersTurn_RaisesNotPlayersTurnError():
     with pytest.raises(NotPlayersTurnError):
         game.move("p2", 7, 7)
 
-# move: outside field -> IllegalMoveError
+@pytest.mark.parametrize("x,y", [(-1, 7), (7, -1), (15, 7), (7, 15)])
+def test_Move_OutsideField_RaisesIllegalMoveError(x, y):
+    game = Game("p1", "p2")
+    with pytest.raises(IllegalMoveError):
+        game.move("p1", x, y)
 
-# move: already taken position -> IllegalMoveError
+def test_Move_PositionAlreadyTaken_RaisesIllegalMoveError():
+    game = Game("p1", "p2", [[7, 7]])
+    with pytest.raises(IllegalMoveError):
+        game.move("p2", 7, 7)
 
 def test_ToJson_WithValidContents_ReturnsJson():
     game = Game("p1", "p2", [[1, 1], [2, 2]])
