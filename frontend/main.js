@@ -1,4 +1,5 @@
 let currentGame = -1;
+let board = [];
 
 function createNewGame() {
     fetch("/api/games", {
@@ -32,27 +33,40 @@ function createButton(text, callback) {
 function showGame(id) {
     currentGame = id;
     fetch(`/api/games/${id}`).then(response => {
-        if(response.ok) {
+        if (response.ok) {
             response.json().then(game => {
-                const board = []
-                for(let y = 0;y < 15;y++) {
-                    board.push(Array.from({length: 15}, () => 0));
+                const localBoard = []
+                for (let y = 0; y < 15; y++) {
+                    localBoard.push(Array.from({ length: 15 }, () => 0));
                 }
                 let current = 1;
-                for(const move of game.moves) {
-                    board[move[1]][move[0]] = current;
+                clearBoard();
+                for (const move of game.moves) {
+                    const el = renderElement(current);
+                    board[move[0]][move[1]].innerHTML = el;
+                    board[move[0]][move[1]].className = el;
+                    localBoard[move[1]][move[0]] = current;
                     current = current % 2 + 1;
                 }
                 renderedBoard = game.player1 + " vs " + game.player2 + "\n" +
                     "                     1 1 1 1 1 1\n" +
                     "   1 2 3 4 5 6 7 8 9 0 1 2 3 4 5\n" +
-                    board.map((line, index) => `${index < 9 ? " ":""}${index + 1} ` + line.map(element => renderElement(element)).join(" ")).join("\n");
+                    localBoard.map((line, index) => `${index < 9 ? " " : ""}${index + 1} ` + line.map(element => renderElement(element)).join(" ")).join("\n");
                 console.log(renderedBoard);
                 document.getElementById("show_game").innerHTML = renderedBoard;
             });
         }
     });
 }
+
+function clearBoard() {
+    for(let y = 0;y < 15;y++) {
+        for(let x = 0;x < 15;x++) {
+            board[x][y].innerHTML = "";
+        }
+    }
+}
+
 
 function joinGame(id) {
     fetch(`/api/games/${id}`, {
@@ -61,27 +75,28 @@ function joinGame(id) {
 }
 
 function doMove() {
-    if(currentGame == -1) {
+    move(parseInt(document.getElementById("x").value) - 1, parseInt(document.getElementById("y").value) - 1);
+}
+
+function move(x, y) {
+    if (currentGame == -1) {
         return;
     }
 
     fetch(`/api/games/${currentGame}`, {
         method: "POST",
-        body: JSON.stringify({
-            "x": parseInt(document.getElementById("x").value) - 1,
-            "y": parseInt(document.getElementById("y").value) - 1
-        })
+        body: JSON.stringify({"x": x, "y": y})
     }).then(response => {
-        if(response.ok) {
+        if (response.ok) {
             showGame(currentGame);
         }
     });
 }
 
 function renderElement(element) {
-    if(element === 0) {
+    if (element === 0) {
         return ".";
-    } else if(element == 1) {
+    } else if (element == 1) {
         return "X";
     } else {
         return "O";
@@ -112,4 +127,32 @@ function setEmailLoop() {
     }
 }
 
-window.onload = setEmailLoop;
+window.onload = () => {
+    setEmailLoop();
+    document.getElementById("board").appendChild(clickableGrid(15, 15, (el, r, c) => {
+        console.log("row: " + r + ", col: " + c);
+        move(c, r);
+    }));
+}
+
+function clickableGrid(rows, cols, callback) {
+    for (let y = 0; y < 15; y++) {
+        board.push(Array.from({ length: 15 }, () => 0));
+    }
+
+    var grid = document.createElement('table');
+    grid.className = 'grid';
+    for (var r = 0; r < rows; ++r) {
+        var tr = grid.appendChild(document.createElement('tr'));
+        for (var c = 0; c < cols; ++c) {
+            var cell = tr.appendChild(document.createElement('td'));
+            cell.addEventListener('click', (function (el, r, c) {
+                return function () {
+                    callback(el, r, c);
+                }
+            })(cell, r, c), false);
+            board[c][r] = cell;
+        }
+    }
+    return grid;
+}
