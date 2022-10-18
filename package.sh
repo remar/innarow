@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -r ../innarow-build
+rm -rf ../innarow-build
 mkdir -p ../innarow-build
 cp -r frontend ../innarow-build
 mkdir -p ../innarow-build/backend
