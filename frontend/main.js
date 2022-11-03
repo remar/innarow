@@ -44,6 +44,7 @@ function showGame(id) {
                     current = current % 2 + 1;
                 }
                 renderedBoard = game.player1 + " vs " + game.player2 + "\n";
+		renderedBoard += "Winner: undecided\n";
                 document.getElementById("show_game").innerHTML = renderedBoard;
             });
         }
