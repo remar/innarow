@@ -1,4 +1,5 @@
 import json
+from Board import Board
 
 class Game:
     def __init__(self, player1 = None, player2 = None, moves = None) -> None:
@@ -7,16 +8,22 @@ class Game:
         self.moves = moves or []
 
     def move(self, player, x, y):
+        self.__verify_move(player, x, y)
+        self.moves.append([x, y])
+
+    def get_winner(self):
+        Board(self.moves).get_winner()
+
+    def to_json(self):
+        return json.dumps({"player1":self.player1, "player2":self.player2, "moves":self.moves})
+
+    def __verify_move(self, player, x, y):
         if not self.__players_are_assigned():
             raise PlayersMissingError
         if not self.__is_players_turn(player):
             raise NotPlayersTurnError
         if not self.__is_legal_move(x, y):
             raise IllegalMoveError
-        self.moves.append([x, y])
-
-    def to_json(self):
-        return json.dumps({"player1":self.player1, "player2":self.player2, "moves":self.moves})
 
     def __players_are_assigned(self):
         return self.player1 and self.player2
