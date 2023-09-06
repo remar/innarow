@@ -12,7 +12,7 @@ class Game:
         self.moves.append([x, y])
 
     def get_winner(self):
-        Board(self.moves).get_winner()
+        return Board(self.moves).get_winner()
 
     def to_json(self):
         return json.dumps({"player1":self.player1, "player2":self.player2, "moves":self.moves})

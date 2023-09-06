@@ -55,6 +55,68 @@ def test_GetWinner_WithNoWinner_ReturnsNone():
     game = Game("p1", "p2")
     assert game.get_winner() == None
 
+def test_GetWinner_FirstPlayerWinsHorizontally_ReturnsX():
+    board = """
+x x x x x . . . . . . . . . .
+o o o o . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+"""
+    game = make_game(board)
+    assert game.get_winner() == "x"
+
+def test_GetWinner_FirstPlayerWinsVertically_ReturnsX():
+    board = """
+x o . . . . . . . . . . . . .
+x o . . . . . . . . . . . . .
+x o . . . . . . . . . . . . .
+x o . . . . . . . . . . . . .
+x . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+"""
+    game = make_game(board)
+    assert game.get_winner() == "x"
+
+def test_GetWinner_FirstPlayerWinsDiagonally_ReturnsX():
+    board = """
+x o . . . . . . . . . . . . .
+. x o . . . . . . . . . . . .
+. . x o . . . . . . . . . . .
+. . . x o . . . . . . . . . .
+. . . . x . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+"""
+    game = make_game(board)
+    assert game.get_winner() == "x"
 
 def test_extract_moves():
     board = """
