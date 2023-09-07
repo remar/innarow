@@ -1,3 +1,8 @@
+Todo
+---------------------
+- Show who has won in frontend
+
+
 Features
 ---------------------
 - Sign in with Google

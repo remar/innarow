@@ -1,6 +1,6 @@
 import json
 import pytest
-from Game import Game, PlayersMissingError, NotPlayersTurnError, IllegalMoveError
+from Game import Game, PlayersMissingError, NotPlayersTurnError, IllegalMoveError, GameOverError
 import itertools
 
 def test_Game_WithoutConstructorArguments_CreatesEmptyGame():
@@ -51,11 +51,11 @@ def test_ToJson_WithValidContents_ReturnsJson():
     assert game_object["player2"] == "p2"
     assert game_object["moves"] == [[1,1],[2,2]]
 
-def test_GetWinner_WithNoWinner_ReturnsNone():
+def test_Winner_WithNoWinner_ReturnsNone():
     game = Game("p1", "p2")
-    assert game.get_winner() == None
+    assert game.winner == None
 
-def test_GetWinner_FirstPlayerWinsHorizontally_ReturnsX():
+def test_Winner_FirstPlayerWinsHorizontally_ReturnsX():
     board = """
 x x x x x . . . . . . . . . .
 o o o o . . . . . . . . . . .
@@ -74,9 +74,9 @@ o o o o . . . . . . . . . . .
 . . . . . . . . . . . . . . .
 """
     game = make_game(board)
-    assert game.get_winner() == "x"
+    assert game.winner == "x"
 
-def test_GetWinner_FirstPlayerWinsVertically_ReturnsX():
+def test_Winner_FirstPlayerWinsVertically_ReturnsX():
     board = """
 x o . . . . . . . . . . . . .
 x o . . . . . . . . . . . . .
@@ -95,9 +95,9 @@ x . . . . . . . . . . . . . .
 . . . . . . . . . . . . . . .
 """
     game = make_game(board)
-    assert game.get_winner() == "x"
+    assert game.winner == "x"
 
-def test_GetWinner_FirstPlayerWinsDiagonally_ReturnsX():
+def test_Winner_FirstPlayerWinsDiagonally_ReturnsX():
     board = """
 x o . . . . . . . . . . . . .
 . x o . . . . . . . . . . . .
@@ -116,7 +116,55 @@ x o . . . . . . . . . . . . .
 . . . . . . . . . . . . . . .
 """
     game = make_game(board)
-    assert game.get_winner() == "x"
+    assert game.winner == "x"
+
+def test_Winner_WithAlreadySetWinner_ReturnsWinner():
+    game = Game(winner = "o")
+    assert game.winner == "o"
+
+def test_Move_WinningMoveForX_AWinnerIsX():
+    board = """
+x x x x . . . . . . . . . . .
+o o o o . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+"""
+    game = make_game(board)
+    game.move("p1", 4, 0)
+    assert game.winner == "x"
+
+def test_Move_WithWinnerAlreadyDecided_RaisesGameOverError():
+    board = """
+x o . . . . . . . . . . . . .
+x o . . . . . . . . . . . . .
+x o . . . . . . . . . . . . .
+x o . . . . . . . . . . . . .
+x . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+"""
+    game = make_game(board)
+    with pytest.raises(GameOverError):
+        game.move("p2", 7, 7)
 
 def test_extract_moves():
     board = """

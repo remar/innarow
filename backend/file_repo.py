@@ -35,11 +35,16 @@ def get_game(id):
     __read_games()
     if id not in games:
         return None
-    return Game(games[id]["player1"], games[id]["player2"], games[id]["moves"])
+    return Game(
+        games[id]["player1"],
+        games[id]["player2"],
+        games[id]["moves"],
+        games[id]["winner"] if "winner" in games[id] else None
+    )
 
 def save_game(id, game):
     __read_games()
-    games[id] = {"player1":game.player1, "player2":game.player2, "moves":game.moves}
+    games[id] = {"player1":game.player1, "player2":game.player2, "moves":game.moves, "winner":game.winner}
     __write_games()
 
 def __read_users():

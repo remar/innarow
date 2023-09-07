@@ -2,20 +2,25 @@ import json
 from Board import Board
 
 class Game:
-    def __init__(self, player1 = None, player2 = None, moves = None) -> None:
+    def __init__(self, player1 = None, player2 = None, moves = None, winner = None) -> None:
         self.player1 = player1
         self.player2 = player2
         self.moves = moves or []
+        if winner:
+            self.winner = winner
+        else:
+            self.update_winner()
 
     def move(self, player, x, y):
         self.__verify_move(player, x, y)
         self.moves.append([x, y])
+        self.update_winner()
 
-    def get_winner(self):
-        return Board(self.moves).get_winner()
+    def update_winner(self):
+        self.winner = Board(self.moves).get_winner()
 
     def to_json(self):
-        return json.dumps({"player1":self.player1, "player2":self.player2, "moves":self.moves})
+        return json.dumps({"player1":self.player1, "player2":self.player2, "moves":self.moves, "winner":self.winner})
 
     def __verify_move(self, player, x, y):
         if not self.__players_are_assigned():
@@ -24,6 +29,8 @@ class Game:
             raise NotPlayersTurnError
         if not self.__is_legal_move(x, y):
             raise IllegalMoveError
+        if self.winner is not None:
+            raise GameOverError
 
     def __players_are_assigned(self):
         return self.player1 and self.player2
@@ -46,3 +53,4 @@ class Game:
 class PlayersMissingError(Exception): pass
 class NotPlayersTurnError(Exception): pass
 class IllegalMoveError(Exception): pass
+class GameOverError(Exception): pass
