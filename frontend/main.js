@@ -44,11 +44,18 @@ function showGame(id) {
                     current = current % 2 + 1;
                 }
                 renderedBoard = game.player1 + " vs " + game.player2 + "\n";
-		renderedBoard += "Winner: undecided\n";
+		renderedBoard += "Winner: " + showWinner(game) + "\n";
                 document.getElementById("show_game").innerHTML = renderedBoard;
             });
         }
     });
+}
+
+function showWinner(game) {
+    if(game.winner === null) {
+	return "undecided";
+    }
+    return game.winner + " (" + (game.winner === "x" ? game.player1 : game.player2) + ")";
 }
 
 function clearBoard() {

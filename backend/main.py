@@ -97,6 +97,8 @@ def do_move(id):
         return "It's not players turn", 409
     except IllegalMoveError:
         return "That move is not allowed", 400
+    except GameOverError:
+        return "Game is over, no more moves allowed", 400
 
 # GET /api/users -> get all users -- why?
 # GET /api/users/<id> -> get user with id -- why?

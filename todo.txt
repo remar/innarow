@@ -1,6 +1,5 @@
 Todo
 ---------------------
-- Show who has won in frontend
 
 
 Features
